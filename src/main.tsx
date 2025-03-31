@@ -17,7 +17,6 @@ root.render(
   <QueryClientProvider client={queryClient}>
     <RecoilRoot>
       <ThemeProvider theme={theme}>
-        {/* auto complete is not avaliable for theme */}
         <Router>
           <App />
         </Router>
