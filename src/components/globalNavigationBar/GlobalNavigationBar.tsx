@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import variables from '../../styles/variables';
+import variables from '@/styles/variables';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const GlobalNavigationBar = () => {
