@@ -3,6 +3,7 @@ import GlobalNavigationBar from './components/globalNavigationBar/GlobalNavigati
 import { Routes, Route, Navigate } from 'react-router-dom';
 import BookList from './pages/Book/List';
 import styled from 'styled-components';
+import FavoriteList from './pages/Favorite/List';
 
 function App() {
   return (
@@ -13,6 +14,12 @@ function App() {
           <Route
             index
             element={<BookList></BookList>}
+          />
+        </Route>
+        <Route path="/favorite">
+          <Route
+            index
+            element={<FavoriteList></FavoriteList>}
           />
         </Route>
         <Route
