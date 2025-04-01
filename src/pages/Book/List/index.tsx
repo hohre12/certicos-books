@@ -7,10 +7,13 @@ import Button from '@/components/button/Button';
 import { SvgIcon } from '@/components/svgIcon/SvgIcon';
 import TableItem from './components/tableItem/TableItem';
 import { debounce } from 'lodash';
+import DetailSearchPopup from './components/detailSearchPopup/DetailSearchPopup';
 
 const BookList = () => {
   const [text, setText] = useState<string>('');
   const [searchText, setSearchText] = useState<string>('');
+  const [isDetailSearchPopup, setIsDetailSearchPopup] =
+    useState<boolean>(false);
   const listWrapperRef = useRef<HTMLDivElement | null>(null);
   const { data, isLoading, error, fetchNextPage } = useGetBookList({
     query: searchText,
@@ -69,13 +72,17 @@ const BookList = () => {
           onRecentClick={handleSearch}
           recentKey="book"
         ></SearchBox>
-        <Button
-          width={72}
-          height={36}
-          size="small"
-        >
-          상세검색
-        </Button>
+        <ButtonWrapper>
+          <Button
+            width={72}
+            height={36}
+            size="small"
+            onClick={() => setIsDetailSearchPopup(!isDetailSearchPopup)}
+          >
+            상세검색
+          </Button>
+          {isDetailSearchPopup && <DetailSearchPopup></DetailSearchPopup>}
+        </ButtonWrapper>
       </SearchBoxWrapper>
       <ListContent>
         <ListInfo>
@@ -120,6 +127,10 @@ const SearchBoxWrapper = styled.div`
   display: flex;
   gap: 16px;
   align-items: center;
+`;
+
+const ButtonWrapper = styled.div`
+  position: relative;
 `;
 
 const ListContent = styled.div`

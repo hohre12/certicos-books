@@ -63,6 +63,8 @@ const TitleWrapper = styled.div`
 
 const PriceWrapper = styled.div`
   margin-left: 22px;
+  width: 80px;
+  text-align: right;
   h4 {
     white-space: nowrap;
   }
