@@ -15,10 +15,10 @@ const text = {
   [`textSubtitle`]: '#8D94A0',
 };
 
-const color = {
+const variables = {
   ...palette,
   ...fonts,
   ...text,
 };
 
-export default color;
+export default variables;

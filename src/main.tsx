@@ -17,7 +17,9 @@ root.render(
   <QueryClientProvider client={queryClient}>
     <RecoilRoot>
       <ThemeProvider theme={theme}>
-        <Router>
+        <Router
+          future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+        >
           <App />
         </Router>
       </ThemeProvider>
