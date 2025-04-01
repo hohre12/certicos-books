@@ -32,5 +32,6 @@ module.exports = {
     'no-use-before-define': 'off',
     'no-unused-vars': 'off',
     'prettier/prettier': ['error', prettierConfig],
+    '@typescript-eslint/no-explicit-any': 'off', 
   },
 }

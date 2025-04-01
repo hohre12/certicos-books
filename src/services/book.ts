@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import axiosInstance from './api';
 import { TBook, TBookListRequest } from '@/types/book';
 import { TListResponse } from '@/types/common';
+import bookList from './keys/book';
 
 export const getBookList = async (
   params: TBookListRequest,
@@ -14,7 +15,8 @@ export const getBookList = async (
 
 export const useGetBookList = (params: TBookListRequest) => {
   return useQuery({
-    queryKey: ['bookList'],
+    queryKey: bookList.list(params),
     queryFn: () => getBookList(params),
+    enabled: !!params.query,
   });
 };
