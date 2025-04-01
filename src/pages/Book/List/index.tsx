@@ -2,16 +2,19 @@ import styled from 'styled-components';
 import variables from '@/styles/variables';
 import { useGetBookList } from '@/services/book';
 import SearchBox from '@/components/searchBox/SearchBox';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Button from '@/components/button/Button';
 import { SvgIcon } from '@/components/svgIcon/SvgIcon';
 import TableItem from './components/tableItem/TableItem';
+import { debounce } from 'lodash';
 
 const BookList = () => {
   const [text, setText] = useState<string>('');
   const [searchText, setSearchText] = useState<string>('');
-  const { data, isLoading, error } = useGetBookList({
+  const listWrapperRef = useRef<HTMLDivElement | null>(null);
+  const { data, isLoading, error, fetchNextPage } = useGetBookList({
     query: searchText,
+    size: 10,
   });
   const handleSearch = useCallback(
     (value: string) => {
@@ -22,6 +25,32 @@ const BookList = () => {
   const handleSearchTextDelete = useCallback(() => {
     setSearchText('');
   }, [setSearchText]);
+
+  const handleScroll = debounce(() => {
+    if (listWrapperRef.current) {
+      const { scrollTop, clientHeight, scrollHeight } = listWrapperRef.current;
+      console.log('안오나', scrollTop + clientHeight >= scrollHeight);
+
+      // 스크롤이 하단에 도달했는지 확인
+      if (scrollTop + clientHeight >= scrollHeight) {
+        fetchNextPage();
+      }
+    }
+  }, 300); // 디바운스
+
+  useEffect(() => {
+    const wrapper = listWrapperRef.current;
+    if (wrapper) {
+      wrapper.addEventListener('scroll', handleScroll);
+    }
+    return () => {
+      if (wrapper) {
+        wrapper.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, [handleScroll]);
+
+  const list = data?.pages.flatMap((page) => page.documents) ?? [];
 
   // TODO
   if (isLoading) return <div className="loading">Loading...</div>;
@@ -52,16 +81,18 @@ const BookList = () => {
         <ListInfo>
           <p>도서 검색 결과</p>
           <span>
-            총 <b>{data?.documents?.length ?? 0}</b>건
+            총 <b>{list.length ?? 0}</b>건
           </span>
         </ListInfo>
-        {data && data.documents.length > 0 ? (
-          data.documents.map((book, idx) => (
-            <TableItem
-              key={idx}
-              data={book}
-            ></TableItem>
-          ))
+        {list.length > 0 ? (
+          <TableItemWrapper ref={listWrapperRef}>
+            {list.map((book, idx) => (
+              <TableItem
+                key={idx}
+                data={book}
+              ></TableItem>
+            ))}
+          </TableItemWrapper>
         ) : (
           <NoListWrapper>
             <SvgIcon iconName="icon-book" />
@@ -77,6 +108,7 @@ export default BookList;
 
 const BookListWrapper = styled.div`
   padding: 100px 500px 0;
+  height: calc(100% - 80px);
 `;
 
 const TitleWrapper = styled.div`
@@ -95,6 +127,7 @@ const ListContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 36px;
+  height: calc(100% - 126px);
 `;
 const ListInfo = styled.div`
   ${variables['textPrimary']}
@@ -107,6 +140,11 @@ const ListInfo = styled.div`
   b {
     color: ${variables['palettePrimary']};
   }
+`;
+
+const TableItemWrapper = styled.div`
+  height: 100%;
+  overflow-y: auto;
 `;
 const NoListWrapper = styled.div`
   display: flex;
