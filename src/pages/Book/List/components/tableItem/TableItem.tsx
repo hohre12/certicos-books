@@ -1,8 +1,11 @@
 import Button from '@/components/button/Button';
 import { SvgIcon } from '@/components/svgIcon/SvgIcon';
+import { favoriteBooksState } from '@/state/favorite';
+import { Favorite } from '@/styles/common';
 import variables from '@/styles/variables';
 import { TBook } from '@/types/book';
 import { numberFormat } from '@/utils/common';
+import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 
 type TTableItemProps = {
@@ -12,11 +15,27 @@ type TTableItemProps = {
 };
 
 const TableItem = ({ data, isOpen, onOpen }: TTableItemProps) => {
+  const [favorites, setFavorites] = useRecoilState(favoriteBooksState);
+  const isFavorite = favorites.map((book) => book.isbn).includes(data.isbn);
+
+  const handleFavoriteToggle = () => {
+    setFavorites((prevFavorites) =>
+      isFavorite
+        ? prevFavorites.filter((book) => book.isbn !== data.isbn)
+        : [...prevFavorites, data],
+    );
+  };
   return (
     <TableItemRootWrapper>
       <TableItemWrapper $isOpen={isOpen}>
         <ThumbnailWrapper>
           <img src={data.thumbnail} />
+          <Favorite
+            type="input"
+            $size={16}
+            checked={isFavorite}
+            onChange={handleFavoriteToggle}
+          />
         </ThumbnailWrapper>
         <TitleWrapper>
           <h4>{data.title}</h4>
@@ -45,6 +64,14 @@ const TableItem = ({ data, isOpen, onOpen }: TTableItemProps) => {
       <TableItemDetailWrapper $isOpen={isOpen}>
         <DetailThumbnailWrapper>
           <img src={data.thumbnail} />
+          <Favorite
+            type="input"
+            $size={24}
+            $top={12}
+            $right={10}
+            checked={isFavorite}
+            onChange={handleFavoriteToggle}
+          />
         </DetailThumbnailWrapper>
         <DetailInfoWrapper>
           <div className="detailTitleWrapper">
@@ -104,6 +131,7 @@ const TableItemWrapper = styled.div<{ $isOpen: boolean }>`
   max-height: ${({ $isOpen }) => ($isOpen ? '0px' : 'none')};
 `;
 const ThumbnailWrapper = styled.div`
+  position: relative;
   min-width: 48px;
   height: 68px;
   img {
@@ -169,6 +197,7 @@ const TableItemDetailWrapper = styled.div<{ $isOpen: boolean }>`
 `;
 
 const DetailThumbnailWrapper = styled.div`
+  position: relative;
   min-width: 210px;
   height: 280px;
   img {

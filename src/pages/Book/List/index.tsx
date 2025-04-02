@@ -100,7 +100,7 @@ const BookList = () => {
           onRemoveClick={handleSearchTextDelete}
           onKeyDown={handleSearch}
           onRecentClick={handleSearch}
-          recentKey="book"
+          recentKey="recentBook"
         ></SearchBox>
         <ButtonWrapper>
           <Button

@@ -48,7 +48,10 @@ const SearchBox = ({
           setRecentSearches(updatedSearches);
           LocalStorage.setItem(recentKey, JSON.stringify(updatedSearches));
         }
-        if (onKeyDown) onKeyDown(value);
+        if (onKeyDown) {
+          onKeyDown(value);
+          setIsFocus(false);
+        }
       }
     },
     [value, recentKey, onKeyDown, recentSearches],
