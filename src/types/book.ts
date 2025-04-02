@@ -1,5 +1,5 @@
 export type TBookListSort = 'accuracy' | 'latest';
-export type TBookListTarget = 'title' | 'isbn' | 'publisher' | 'person';
+export type TBookListTarget = 'title' | 'person' | 'publisher';
 
 export type TBookListRequest = {
   query: string; // 검색어

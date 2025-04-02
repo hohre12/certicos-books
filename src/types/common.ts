@@ -9,6 +9,12 @@ export type TListResponse<T> = {
   documents: T[];
 };
 
+export type TDropdownOptionsProps = {
+  id?: any;
+  value?: any;
+  name?: any;
+};
+
 export type TVariant =
   | 'primary'
   | 'red'

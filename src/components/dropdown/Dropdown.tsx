@@ -1,22 +1,24 @@
+import { TDropdownOptionsProps } from '@/types/common';
 import { HTMLAttributes, ReactNode, useEffect, useRef, useState } from 'react';
 import { usePopper } from 'react-popper';
 import styled from 'styled-components';
 
 interface IDropdownProps extends HTMLAttributes<HTMLDivElement> {
+  options: TDropdownOptionsProps[];
+  optionClick: (value: TDropdownOptionsProps) => void;
   buttonText?: string;
   buttonClassName?: string;
   rightSvg?: ReactNode;
-  controlOpen?: boolean;
   disabled?: boolean;
 }
 
 const Dropdown = ({
+  options,
+  optionClick,
   buttonText,
   buttonClassName,
   rightSvg,
-  controlOpen,
   disabled,
-  ...props
 }: IDropdownProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -45,18 +47,10 @@ const Dropdown = ({
     setIsOpen(!isOpen);
   };
 
-  const handleListItemClick = (event: React.MouseEvent) => {
-    const target = event.target as HTMLElement;
-    if (target.tagName.toLowerCase() === 'li') {
-      setIsOpen(false);
-    }
+  const handleOptionClick = (it: TDropdownOptionsProps) => {
+    optionClick(it);
+    setIsOpen(false);
   };
-
-  useEffect(() => {
-    if (controlOpen !== undefined) {
-      setIsOpen(controlOpen);
-    }
-  }, [controlOpen]);
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
@@ -81,10 +75,16 @@ const Dropdown = ({
           ref={setPopperElement}
           className="DropdownMenu"
           style={styles.popper as React.CSSProperties}
-          onClick={handleListItemClick}
           {...attributes.popper}
         >
-          {props.children}
+          {options.map((it, idx) => (
+            <li
+              key={idx}
+              onClick={() => handleOptionClick(it)}
+            >
+              {it.name}
+            </li>
+          ))}
         </ul>
       )}
     </DropdownWrapper>

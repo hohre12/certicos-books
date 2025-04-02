@@ -2,16 +2,49 @@ import Button from '@/components/button/Button';
 import Dropdown from '@/components/dropdown/Dropdown';
 import Input from '@/components/input/Input';
 import { SvgIcon } from '@/components/svgIcon/SvgIcon';
+import { HangleBookListTarget } from '@/constants/common';
 import variables from '@/styles/variables';
+import { TBookListTarget } from '@/types/book';
+import { TDropdownOptionsProps } from '@/types/common';
+import { useState } from 'react';
 import styled from 'styled-components';
 
-const DetailSearchPopup = () => {
+type TDetailSearchPopupProps = {
+  searchText: string;
+  searchTarget: TBookListTarget;
+  handleDetailSearch: (
+    searchValue: string,
+    searchTarget: TBookListTarget,
+  ) => void;
+};
+
+const DetailSearchPopup = ({
+  searchText,
+  searchTarget,
+  handleDetailSearch,
+}: TDetailSearchPopupProps) => {
+  const [text, setText] = useState<string>(searchText);
+  const [target, setTarget] = useState<TBookListTarget>(searchTarget);
+  const handleSubmit = () => {
+    if (!target) return;
+    handleDetailSearch(text, target);
+  };
+  const handleOptionClick = (item: TDropdownOptionsProps) => {
+    setTarget(item.value as TBookListTarget);
+  };
   return (
     <DetailSearchPopupWrapper>
       <SearchInputWrapper>
         <DropdownWrapper>
           <Dropdown
-            buttonText="제목"
+            options={Object.keys(HangleBookListTarget)
+              .filter((key) => key !== target)
+              .map((key) => ({
+                value: key,
+                name: HangleBookListTarget[key as TBookListTarget],
+              }))}
+            optionClick={handleOptionClick}
+            buttonText={HangleBookListTarget[target]}
             rightSvg={
               <SvgIcon
                 iconName="icon-arrow-down"
@@ -19,17 +52,14 @@ const DetailSearchPopup = () => {
                 wrapperClass="marginLeft"
               />
             }
-          >
-            <li>
-              <p>테스트1</p>
-            </li>
-            <li>
-              <p>테스트2</p>
-            </li>
-          </Dropdown>
+          ></Dropdown>
         </DropdownWrapper>
         <InputWrapper>
-          <Input placeholder="검색어 입력"></Input>
+          <Input
+            value={text}
+            placeholder="검색어 입력"
+            onTextChange={(value) => setText(value)}
+          ></Input>
         </InputWrapper>
       </SearchInputWrapper>
       <Button
@@ -37,6 +67,7 @@ const DetailSearchPopup = () => {
         width={312}
         height={36}
         size="small"
+        onClick={handleSubmit}
       >
         검색하기
       </Button>

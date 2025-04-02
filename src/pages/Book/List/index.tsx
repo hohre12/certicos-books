@@ -8,33 +8,53 @@ import { SvgIcon } from '@/components/svgIcon/SvgIcon';
 import TableItem from './components/tableItem/TableItem';
 import { debounce } from 'lodash';
 import DetailSearchPopup from './components/detailSearchPopup/DetailSearchPopup';
+import { TBookListTarget } from '@/types/book';
 
 const BookList = () => {
   const [text, setText] = useState<string>('');
   const [searchText, setSearchText] = useState<string>('');
+  const [detailSearchText, setDetailSearchText] = useState<string>('');
   const [isDetailSearchPopup, setIsDetailSearchPopup] =
     useState<boolean>(false);
   const listWrapperRef = useRef<HTMLDivElement | null>(null);
+  const [searchTarget, setSearchTarget] = useState<TBookListTarget>('title');
   const { data, isLoading, error, fetchNextPage } = useGetBookList({
     query: searchText,
+    // sort,
     size: 10,
+    target: searchTarget,
   });
   const handleSearch = useCallback(
     (value: string) => {
       setSearchText(value);
+      setDetailSearchText('');
+      setSearchTarget('title');
+      setIsDetailSearchPopup(false);
     },
     [setSearchText],
   );
   const handleSearchTextDelete = useCallback(() => {
     setSearchText('');
+    setDetailSearchText('');
+    setSearchTarget('title');
+    setIsDetailSearchPopup(false);
   }, [setSearchText]);
+
+  const handleDetailSearch = useCallback(
+    (searchValue: string, searchTarget: TBookListTarget) => {
+      setText('');
+      setDetailSearchText(searchValue);
+      setSearchText(searchValue);
+      setSearchTarget(searchTarget);
+      setIsDetailSearchPopup(false);
+    },
+    [setSearchText, setSearchTarget],
+  );
 
   const handleScroll = debounce(() => {
     if (listWrapperRef.current) {
       const { scrollTop, clientHeight, scrollHeight } = listWrapperRef.current;
-      console.log('안오나', scrollTop + clientHeight >= scrollHeight);
 
-      // 스크롤이 하단에 도달했는지 확인
       if (scrollTop + clientHeight >= scrollHeight) {
         fetchNextPage();
       }
@@ -81,7 +101,13 @@ const BookList = () => {
           >
             상세검색
           </Button>
-          {isDetailSearchPopup && <DetailSearchPopup></DetailSearchPopup>}
+          {isDetailSearchPopup && (
+            <DetailSearchPopup
+              searchText={detailSearchText}
+              searchTarget={searchTarget}
+              handleDetailSearch={handleDetailSearch}
+            ></DetailSearchPopup>
+          )}
         </ButtonWrapper>
       </SearchBoxWrapper>
       <ListContent>
