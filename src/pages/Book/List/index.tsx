@@ -5,41 +5,71 @@ import SearchBox from '@/components/searchBox/SearchBox';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Button from '@/components/button/Button';
 import { SvgIcon } from '@/components/svgIcon/SvgIcon';
-import TableItem from './components/tableItem/TableItem';
+import TableItem from '@/components/tableItem/TableItem';
 import { debounce } from 'lodash';
 import DetailSearchPopup from './components/detailSearchPopup/DetailSearchPopup';
+import { TBookListTarget } from '@/types/book';
 
 const BookList = () => {
+  const [openIsbns, setOpenIsbns] = useState<string[]>([]);
   const [text, setText] = useState<string>('');
   const [searchText, setSearchText] = useState<string>('');
+  const [detailSearchText, setDetailSearchText] = useState<string>('');
   const [isDetailSearchPopup, setIsDetailSearchPopup] =
     useState<boolean>(false);
   const listWrapperRef = useRef<HTMLDivElement | null>(null);
+  const [searchTarget, setSearchTarget] = useState<TBookListTarget>('title');
   const { data, isLoading, error, fetchNextPage } = useGetBookList({
     query: searchText,
+    // sort,
     size: 10,
+    target: searchTarget,
   });
   const handleSearch = useCallback(
     (value: string) => {
       setSearchText(value);
+      setDetailSearchText('');
+      setSearchTarget('title');
+      setIsDetailSearchPopup(false);
+      setOpenIsbns([]);
     },
     [setSearchText],
   );
   const handleSearchTextDelete = useCallback(() => {
     setSearchText('');
+    setDetailSearchText('');
+    setSearchTarget('title');
+    setIsDetailSearchPopup(false);
+    setOpenIsbns([]);
   }, [setSearchText]);
+
+  const handleDetailSearch = useCallback(
+    (searchValue: string, searchTarget: TBookListTarget) => {
+      setText('');
+      setDetailSearchText(searchValue);
+      setSearchText(searchValue);
+      setSearchTarget(searchTarget);
+      setIsDetailSearchPopup(false);
+      setOpenIsbns([]);
+    },
+    [setSearchText, setSearchTarget],
+  );
+
+  const handleExpandCollapse = (isbn: string) => {
+    setOpenIsbns((prev) =>
+      prev.includes(isbn) ? prev.filter((i) => i !== isbn) : [...prev, isbn],
+    );
+  };
 
   const handleScroll = debounce(() => {
     if (listWrapperRef.current) {
       const { scrollTop, clientHeight, scrollHeight } = listWrapperRef.current;
-      console.log('안오나', scrollTop + clientHeight >= scrollHeight);
 
-      // 스크롤이 하단에 도달했는지 확인
       if (scrollTop + clientHeight >= scrollHeight) {
         fetchNextPage();
       }
     }
-  }, 300); // 디바운스
+  }, 300);
 
   useEffect(() => {
     const wrapper = listWrapperRef.current;
@@ -70,7 +100,7 @@ const BookList = () => {
           onRemoveClick={handleSearchTextDelete}
           onKeyDown={handleSearch}
           onRecentClick={handleSearch}
-          recentKey="book"
+          recentKey="recentBook"
         ></SearchBox>
         <ButtonWrapper>
           <Button
@@ -81,7 +111,13 @@ const BookList = () => {
           >
             상세검색
           </Button>
-          {isDetailSearchPopup && <DetailSearchPopup></DetailSearchPopup>}
+          {isDetailSearchPopup && (
+            <DetailSearchPopup
+              searchText={detailSearchText}
+              searchTarget={searchTarget}
+              handleDetailSearch={handleDetailSearch}
+            ></DetailSearchPopup>
+          )}
         </ButtonWrapper>
       </SearchBoxWrapper>
       <ListContent>
@@ -92,14 +128,16 @@ const BookList = () => {
           </span>
         </ListInfo>
         {list.length > 0 ? (
-          <TableItemWrapper ref={listWrapperRef}>
+          <TableWrapper ref={listWrapperRef}>
             {list.map((book, idx) => (
               <TableItem
                 key={idx}
                 data={book}
+                isOpen={openIsbns.includes(book.isbn)}
+                onOpen={() => handleExpandCollapse(book.isbn)}
               ></TableItem>
             ))}
-          </TableItemWrapper>
+          </TableWrapper>
         ) : (
           <NoListWrapper>
             <SvgIcon iconName="icon-book" />
@@ -153,7 +191,7 @@ const ListInfo = styled.div`
   }
 `;
 
-const TableItemWrapper = styled.div`
+const TableWrapper = styled.div`
   height: 100%;
   overflow-y: auto;
 `;

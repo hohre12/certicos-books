@@ -15,7 +15,6 @@ export const SvgIcon = ({
   ...rest
 }: LazySvgProps) => {
   const { loading, SvgIcon: Svg } = useDynamicSvgImport(iconName);
-
   return (
     <>
       {Svg && (
