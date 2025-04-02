@@ -11,6 +11,7 @@ import DetailSearchPopup from './components/detailSearchPopup/DetailSearchPopup'
 import { TBookListTarget } from '@/types/book';
 
 const BookList = () => {
+  const [openIsbns, setOpenIsbns] = useState<string[]>([]);
   const [text, setText] = useState<string>('');
   const [searchText, setSearchText] = useState<string>('');
   const [detailSearchText, setDetailSearchText] = useState<string>('');
@@ -30,6 +31,7 @@ const BookList = () => {
       setDetailSearchText('');
       setSearchTarget('title');
       setIsDetailSearchPopup(false);
+      setOpenIsbns([]);
     },
     [setSearchText],
   );
@@ -38,6 +40,7 @@ const BookList = () => {
     setDetailSearchText('');
     setSearchTarget('title');
     setIsDetailSearchPopup(false);
+    setOpenIsbns([]);
   }, [setSearchText]);
 
   const handleDetailSearch = useCallback(
@@ -47,9 +50,16 @@ const BookList = () => {
       setSearchText(searchValue);
       setSearchTarget(searchTarget);
       setIsDetailSearchPopup(false);
+      setOpenIsbns([]);
     },
     [setSearchText, setSearchTarget],
   );
+
+  const handleExpandCollapse = (isbn: string) => {
+    setOpenIsbns((prev) =>
+      prev.includes(isbn) ? prev.filter((i) => i !== isbn) : [...prev, isbn],
+    );
+  };
 
   const handleScroll = debounce(() => {
     if (listWrapperRef.current) {
@@ -118,14 +128,16 @@ const BookList = () => {
           </span>
         </ListInfo>
         {list.length > 0 ? (
-          <TableItemWrapper ref={listWrapperRef}>
+          <TableWrapper ref={listWrapperRef}>
             {list.map((book, idx) => (
               <TableItem
                 key={idx}
                 data={book}
+                isOpen={openIsbns.includes(book.isbn)}
+                onOpen={() => handleExpandCollapse(book.isbn)}
               ></TableItem>
             ))}
-          </TableItemWrapper>
+          </TableWrapper>
         ) : (
           <NoListWrapper>
             <SvgIcon iconName="icon-book" />
@@ -179,7 +191,7 @@ const ListInfo = styled.div`
   }
 `;
 
-const TableItemWrapper = styled.div`
+const TableWrapper = styled.div`
   height: 100%;
   overflow-y: auto;
 `;
