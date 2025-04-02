@@ -5,7 +5,7 @@ import SearchBox from '@/components/searchBox/SearchBox';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Button from '@/components/button/Button';
 import { SvgIcon } from '@/components/svgIcon/SvgIcon';
-import TableItem from './components/tableItem/TableItem';
+import TableItem from '@/components/tableItem/TableItem';
 import { debounce } from 'lodash';
 import DetailSearchPopup from './components/detailSearchPopup/DetailSearchPopup';
 import { TBookListTarget } from '@/types/book';
@@ -69,7 +69,7 @@ const BookList = () => {
         fetchNextPage();
       }
     }
-  }, 300); // 디바운스
+  }, 300);
 
   useEffect(() => {
     const wrapper = listWrapperRef.current;
