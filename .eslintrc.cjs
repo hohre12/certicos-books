@@ -1,3 +1,5 @@
+const prettierConfig = require('./.prettierrc.cjs');
+
 module.exports = {
   root: true,
   env: { browser: true, es2020: true },
@@ -9,11 +11,27 @@ module.exports = {
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh'],
+  plugins: ['react-hooks', 'prettier', '@typescript-eslint'],
   rules: {
-    'react-refresh/only-export-components': [
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': [
       'warn',
-      { allowConstantExport: true },
+      {
+        additionalHooks: '(useMyCustomHook|useMyOtherCustomHook)',
+        enableDangerousAutofixThisMayCauseInfiniteLoops: true,
+      },
     ],
+    semi: [
+      'error',
+      'always',
+      { omitLastInOneLineBlock: true, omitLastInOneLineClassBody: true },
+    ],
+    'import/extensions': 'off',
+    'import/prefer-default-export': 'off',
+    'import/order': 'off',
+    'no-use-before-define': 'off',
+    'no-unused-vars': 'off',
+    'prettier/prettier': ['error', prettierConfig],
+    '@typescript-eslint/no-explicit-any': 'off', 
   },
 }
