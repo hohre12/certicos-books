@@ -12,6 +12,7 @@ import styled from 'styled-components';
 type TDetailSearchPopupProps = {
   searchText: string;
   searchTarget: TBookListTarget;
+  onClose: () => void;
   handleDetailSearch: (
     searchValue: string,
     searchTarget: TBookListTarget,
@@ -21,6 +22,7 @@ type TDetailSearchPopupProps = {
 const DetailSearchPopup = ({
   searchText,
   searchTarget,
+  onClose,
   handleDetailSearch,
 }: TDetailSearchPopupProps) => {
   const [text, setText] = useState<string>(searchText);
@@ -34,6 +36,14 @@ const DetailSearchPopup = ({
   };
   return (
     <DetailSearchPopupWrapper>
+      <SvgIcon
+        iconName="icon-close"
+        alt="close"
+        wrapperClass={'iconClose'}
+        width={18}
+        height={18}
+        onClick={onClose}
+      />
       <SearchInputWrapper>
         <DropdownWrapper>
           <Dropdown
@@ -80,6 +90,7 @@ export default DetailSearchPopup;
 const DetailSearchPopupWrapper = styled.div`
   position: absolute;
   top: 50px;
+  left: -135px;
   width: 360px;
   height: 160px;
   background: ${variables['paletteWhite']};
@@ -89,6 +100,12 @@ const DetailSearchPopupWrapper = styled.div`
   border-radius: 8px;
   box-shadow: 0px 5px 12px 0px rgba(0, 0, 0, 0.1);
   padding: 36px 24px;
+  .iconClose {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    cursor: pointer;
+  }
 `;
 const SearchInputWrapper = styled.div`
   display: flex;

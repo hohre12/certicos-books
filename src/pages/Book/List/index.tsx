@@ -116,6 +116,7 @@ const BookList = () => {
               searchText={detailSearchText}
               searchTarget={searchTarget}
               handleDetailSearch={handleDetailSearch}
+              onClose={() => setIsDetailSearchPopup(false)}
             ></DetailSearchPopup>
           )}
         </ButtonWrapper>
