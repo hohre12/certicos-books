@@ -13,7 +13,7 @@ export const Title2 = `
 export const Title3 = `
     font-size: 18px;
     font-weight: 700;
-    line-height: 18px;
+    line-height: 26px;
     letter-spacing: 0px;
 `;
 export const Body1 = `
