@@ -108,6 +108,8 @@ const InputWrapper = styled.div`
     }
   }
   .iconRemove {
+    position: absolute;
+    right: 10px;
     cursor: pointer;
   }
 `;
