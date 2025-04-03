@@ -53,6 +53,7 @@ const ButtonRootWrapper = styled.button<{ $width?: number; $height?: number }>`
   height: ${(props) => (props.$height ? `${props.$height}px` : '48px')};
   border: none;
   white-space: nowrap;
+  // size
   &.small {
     ${variables['Body2']}
     padding: 5px 10px 5px 10px;
@@ -61,21 +62,50 @@ const ButtonRootWrapper = styled.button<{ $width?: number; $height?: number }>`
     ${variables['Caption']}
     padding: 13px 20px;
   }
-  // 폰트
-  // 패딩
-  // 사이즈
-  &.gray {
-    border: 1px solid ${variables['textSubtitle']};
-    color: ${variables['textSubtitle']};
-    background: #fff;
-  }
+
+  // variant
   &.primary {
     color: ${variables['paletteWhite']};
     background: ${variables['palettePrimary']};
+    &:hover {
+      background: #72a0fc;
+    }
+  }
+  &.red {
+    color: ${variables['paletteWhite']};
+    background: ${variables['paletteRed']};
+    &:hover {
+      background: #f76643;
+    }
+  }
+  &.gray {
+    color: ${variables['textSubtitle']};
+    background: ${variables['paletteWhite']};
+    border: 1px solid ${variables['textSubtitle']};
+    &:hover {
+      background: #f7f7f7;
+    }
   }
   &.lightGray {
-    ${variables['Caption']}
     color: ${variables['textSecondary']};
     background: ${variables['paletteLightGray']};
+    &:hover {
+      background: #f0f0f0;
+    }
+  }
+  &.white {
+    color: ${variables['paletteBlack']};
+    background: ${variables['paletteWhite']};
+    border: 1px solid #000;
+    &:hover {
+      background: #f7f7f7;
+    }
+  }
+  &.black {
+    color: ${variables['paletteWhite']};
+    background: ${variables['paletteBlack']};
+    &:hover {
+      background: #383838;
+    }
   }
 `;
