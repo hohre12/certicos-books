@@ -19,7 +19,7 @@
 1. yarn dev 또는 npm run dev
 
 ## 2. 폴더 구조 및 주요 코드 설명
-
+```
 ├─node_modules
 ├─public
 └─src
@@ -48,7 +48,7 @@
     ├─styles                                    # 스타일
     ├─types                                     # TypeScript 타입 정의
     └─utils                                     # 글로벌 함수
-
+```
 
 ## 3. 라이브러리 선택 이유
 
