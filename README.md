@@ -6,6 +6,11 @@
 
 ### 1.1 프로젝트 클론
 
+```
+https://github.com/hohre12/certicos-books.git
+cd certicos-books
+```
+
 ### 1.2 패키지 설치
 
 1. yarn install 또는 npm install
@@ -52,6 +57,24 @@
 
 ## 3. 라이브러리 선택 이유
 
+- **recoil & recoil-persist**: 전역 상태 관리 및 로컬스토리지 기반 데이터 유지
+- **Tanstack Query**: API 데이터 요청 및 캐싱 최적화
+- **Styled-components**: 컴포넌트 기반 스타일링 적용
+- **React Router**: 페이지 네비게이션을 위해 사용
+- **React-popper**: 드롭다운 옵션 포지셔닝을 위해 사용
 
 ## 4. 강조하고 싶은 기능
+
+### 4.1 도서 검색 기능
+- 요구사항에 맞춘 전체검색과 상세검색 동시 진행 불가
+  
+### 4.2 찜한 책 관리
+- recoil-persist를 활용하여 페이지 새로고침 및 세션 종료 후에도 찜목록 유지
+
+### 4.3 아코디언
+- 목록 row 내의 상세보기 클릭시 부드러운 사용성을 위한 아코디언 애니메이션
+
+### 4.4 Tanstack Query를 활용한 API 캐싱
+- 동일한 검색어로 반복 요청 시 API 호출 최소화
+- 데이터 갱신이 필요할 때만 refetch 실행
 
