@@ -7,12 +7,14 @@ import { favoriteBooksState } from '@/state/favorite';
 import { TBook } from '@/types/book';
 import { SvgIcon } from '@/components/svgIcon/SvgIcon';
 import TableItem from '@/components/tableItem/TableItem';
+import { LoadingWrapper, NoListWrapper } from '@/styles/common';
 
 const FavoriteList = () => {
   const favoriteBooks = useRecoilValue(favoriteBooksState);
   const [visibleBooks, setVisibleBooks] = useState<TBook[]>([]);
   const [openIsbns, setOpenIsbns] = useState<string[]>([]);
   const [page, setPage] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const listWrapperRef = useRef<HTMLDivElement | null>(null);
   const handleExpandCollapse = (isbn: string) => {
     setOpenIsbns((prev) =>
@@ -33,8 +35,10 @@ const FavoriteList = () => {
   }, 300);
 
   useEffect(() => {
+    setIsLoading(true);
     const newBooks = favoriteBooks.slice(0, page * 10);
     setVisibleBooks(newBooks);
+    setIsLoading(false);
   }, [favoriteBooks, page]);
 
   useEffect(() => {
@@ -48,6 +52,13 @@ const FavoriteList = () => {
       }
     };
   }, [handleScroll]);
+
+  if (isLoading)
+    return (
+      <LoadingWrapper>
+        <div className="loading"></div>
+      </LoadingWrapper>
+    );
 
   return (
     <FavoriteListWrapper>
@@ -73,7 +84,7 @@ const FavoriteList = () => {
         ) : (
           <NoListWrapper>
             <SvgIcon iconName="icon-book" />
-            <span>검색된 결과가 없습니다.</span>
+            <span>찜한 책이 없습니다.</span>
           </NoListWrapper>
         )}
       </ListContent>
@@ -115,18 +126,4 @@ const ListInfo = styled.div`
 const TableWrapper = styled.div`
   height: 100%;
   overflow-y: auto;
-`;
-
-const NoListWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  margin: auto;
-  align-items: center;
-  justify-content: center;
-  padding: 120px;
-  & > span {
-    ${variables['Caption']}
-    color: ${variables['textSecondary']};
-  }
 `;
