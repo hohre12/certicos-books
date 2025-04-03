@@ -45,7 +45,10 @@ const TableItem = ({ data, isOpen, onOpen }: TTableItemProps) => {
           <h4>{`${numberFormat(data.price)}원`}</h4>
         </PriceWrapper>
         <ButtonWrapper>
-          <Button variant="primary">
+          <Button
+            variant="primary"
+            onClick={() => window.open(data.url, '_blank')}
+          >
             <p>구매하기</p>
           </Button>
           <Button
@@ -109,6 +112,7 @@ const TableItem = ({ data, isOpen, onOpen }: TTableItemProps) => {
             variant="primary"
             style={{ marginTop: '28px' }}
             width={240}
+            onClick={() => window.open(data.url, '_blank')}
           >
             구매하기
           </Button>
