@@ -9,6 +9,7 @@ import TableItem from '@/components/tableItem/TableItem';
 import { debounce } from 'lodash';
 import DetailSearchPopup from './components/detailSearchPopup/DetailSearchPopup';
 import { TBookListTarget } from '@/types/book';
+import { ErrorWrapper, LoadingWrapper, NoListWrapper } from '@/styles/common';
 
 const BookList = () => {
   const [openIsbns, setOpenIsbns] = useState<string[]>([]);
@@ -21,7 +22,7 @@ const BookList = () => {
   const [searchTarget, setSearchTarget] = useState<TBookListTarget>('title');
   const { data, isLoading, error, fetchNextPage } = useGetBookList({
     query: searchText,
-    // sort,
+    sort: 'accuracy',
     size: 10,
     target: searchTarget,
   });
@@ -85,9 +86,18 @@ const BookList = () => {
 
   const list = data?.pages.flatMap((page) => page.documents) ?? [];
 
-  // TODO
-  if (isLoading) return <div className="loading">Loading...</div>;
-  if (error) return <div className="error">{String(error)}</div>;
+  if (isLoading)
+    return (
+      <LoadingWrapper>
+        <div className="loading"></div>
+      </LoadingWrapper>
+    );
+  if (error)
+    return (
+      <ErrorWrapper>
+        <span className="error">{error.message}</span>
+      </ErrorWrapper>
+    );
 
   return (
     <BookListWrapper>
@@ -195,17 +205,4 @@ const ListInfo = styled.div`
 const TableWrapper = styled.div`
   height: 100%;
   overflow-y: auto;
-`;
-const NoListWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  margin: auto;
-  align-items: center;
-  justify-content: center;
-  padding: 120px;
-  & > span {
-    ${variables['Caption']}
-    color: ${variables['textSecondary']};
-  }
 `;
