@@ -127,6 +127,10 @@ const DropdownWrapper = styled.div`
     color: ${variables['textSubtitle']};
     cursor: pointer;
     padding: 6px;
+    border-radius: 5px;
+    &:hover {
+      background: #eee;
+    }
   }
 `;
 const InputWrapper = styled.div`

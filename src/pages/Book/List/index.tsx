@@ -22,7 +22,7 @@ const BookList = () => {
   const [searchTarget, setSearchTarget] = useState<TBookListTarget>('title');
   const { data, isLoading, error, fetchNextPage } = useGetBookList({
     query: searchText,
-    // sort,
+    sort: 'accuracy',
     size: 10,
     target: searchTarget,
   });
