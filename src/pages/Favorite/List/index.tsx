@@ -65,7 +65,7 @@ const FavoriteList = () => {
       <TitleWrapper>내가 찜한 책</TitleWrapper>
       <ListContent>
         <ListInfo>
-          <p>도서 검색 결과</p>
+          <p>찜한 책</p>
           <span>
             총 <b>{favoriteBooks.length ?? 0}</b>건
           </span>
