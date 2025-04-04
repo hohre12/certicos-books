@@ -103,10 +103,12 @@ const TableItem = ({ data, isOpen, onOpen }: TTableItemProps) => {
               <span>원가</span>
               <h4 className="price">{`${numberFormat(data.price)}원`}</h4>
             </div>
-            <div>
-              <span>할인가</span>
-              <h4>{`${numberFormat(data.sale_price)}원`}</h4>
-            </div>
+            {data.sale_price && (
+              <div>
+                <span>할인가</span>
+                <h4>{`${numberFormat(data.sale_price)}원`}</h4>
+              </div>
+            )}
           </div>
           <Button
             variant="primary"
